@@ -1,0 +1,12 @@
+{
+  "title": "Okinawa real estate asking-price data (niffee) / 沖縄 不動産売り出しデータ",
+  "upload_type": "dataset",
+  "description": "<p>沖縄県内で売りに出ている不動産（中古マンション・中古戸建て・土地など）の売り出し価格の統計。同じ物件の重複する掲載を1件にまとめて集計し、毎月更新する。売り出し価格の集計であり、成約価格ではない。</p><p>Monthly statistics of asking prices for real estate listed for sale in Okinawa Prefecture, Japan (condominiums, houses, land). Duplicate listings of the same property are merged before aggregation. Asking prices, not transaction prices.</p><p>Website: <a href=\"https://niffee.yourspacelab.com\">https://niffee.yourspacelab.com</a></p>",
+  "creators": [{ "name": "niffee" }],
+  "license": "cc-by-4.0",
+  "keywords": ["Okinawa", "real estate", "housing prices", "price index", "沖縄", "不動産", "売り出し価格"],
+  "related_identifiers": [
+    { "identifier": "https://niffee.yourspacelab.com", "relation": "isSupplementTo", "resource_type": "other" },
+    { "identifier": "https://niffee.yourspacelab.com/methodology", "relation": "isDocumentedBy", "resource_type": "publication-other" }
+  ]
+}

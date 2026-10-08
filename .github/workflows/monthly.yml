@@ -1,0 +1,40 @@
+# 毎月2日 12:00 JST に、サイトで公開済みの CSV を取ってきてコミットし、リリースを切る。
+# リリースが出ると、Zenodo の GitHub 連携が自動で保存して DOI を付ける（連携のオンは人が Zenodo で1回だけ）。
+# ⚠ 秘密の鍵は使わない（取ってくるのは誰でも読める公開ファイルだけ。push とリリースは GITHUB_TOKEN）
+name: monthly
+on:
+  schedule:
+    - cron: '0 3 2 * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 公開済みの CSV を取ってくる
+        run: |
+          set -euo pipefail
+          curl -fsS https://niffee.yourspacelab.com/price-index.csv -o price-index.csv
+          mkdir -p cities
+          curl -fsS https://niffee.yourspacelab.com/datasets/v1/cities.csv -o cities/latest.csv
+          # 先頭の BOM を外して観測日を読む。日付の形でなければ止める（壊れたファイルをコミットしない）
+          obs=$(sed -n 2p cities/latest.csv | cut -d, -f1 | sed 's/^\xEF\xBB\xBF//')
+          [[ "$obs" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "::error::観測日が読めません: $obs"; exit 1; }
+          [ "$(head -1 price-index.csv)" = "observed_on,property_type,index_base_2026_08_08,median_unit_price_yen_per_sqm,n" ] \
+            || { echo "::error::price-index.csv の列が変わりました"; exit 1; }
+          cp cities/latest.csv "cities/${obs}.csv"
+          echo "OBS=$obs" >> "$GITHUB_ENV"
+      - name: 変わっていればコミットしてリリース
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then echo "変更なし"; exit 0; fi
+          git -c user.name="niffee data bot" -c user.email="bukken@yourspacelab.com" commit -m "data: ${OBS}"
+          git push
+          tag="v${OBS}"
+          gh release create "$tag" --title "${OBS} 時点" \
+            --notes "沖縄 売り出し価格指数と市町村×種別の統計（${OBS} 時点）。出典: 沖縄 売り出し価格指数（niffee）"

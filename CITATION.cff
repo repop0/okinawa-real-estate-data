@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "このデータを使うときは、出典を明記してください。"
+title: "沖縄 不動産売り出しデータ（niffee）"
+type: dataset
+authors:
+  - name: "niffee"
+url: "https://niffee.yourspacelab.com"
+license: CC-BY-4.0
+keywords:
+  - 沖縄
+  - 不動産
+  - 売り出し価格
+  - 指数
+  - Okinawa
+  - real estate
+  - housing prices
