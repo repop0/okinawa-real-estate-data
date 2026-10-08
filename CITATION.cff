@@ -4,6 +4,7 @@ title: "沖縄 不動産売り出しデータ（niffee）"
 type: dataset
 authors:
   - name: "niffee"
+doi: "10.5281/zenodo.23236189"
 url: "https://niffee.yourspacelab.com"
 license: CC-BY-4.0
 keywords:
